@@ -142,7 +142,7 @@ namespace tgfunc
             std::println
             (
                 "Function: {}.",
-                src_loc.function_name();
+                src_loc.function_name()
             );
             std::println("Beginning of {}.", desc);
             const ret _ret = body(_args...);
@@ -183,7 +183,7 @@ namespace tgfunc
             std::println
             (
                 "Function: {}.",
-                src_loc.function_name();
+                src_loc.function_name()
             );
             std::println("Beginning of {}.", desc);
             body(_args...);

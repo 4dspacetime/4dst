@@ -84,7 +84,7 @@ namespace func
             std::println
             (
                 "Function: {}.",
-                src_loc.function_name();
+                src_loc.function_name()
             );
             std::println("Beginning of {}.", desc);
             body();
