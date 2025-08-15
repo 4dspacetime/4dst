@@ -24,7 +24,7 @@ namespace type
     // inline namespace cntr
     // {
     using int_t         = long long;
-    using uint_t        = unsigned int_t;
+    using uint_t        = unsigned long long;
     using flt_t         = long double;
     tpl_t vol_t         = std::atomic<type>;
     tpl_ts_t stat_arr_t = std::array<type, size>;
