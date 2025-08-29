@@ -2,7 +2,7 @@
 #define UNIT_HPP
 #define _si_pfx(name, time)\
 constexpr ldouble operator""##name(const ldouble val)\
-{ return val * time; }
+{ return val * time; } [] {}
 namespace math
 {
     using ldouble = long double;

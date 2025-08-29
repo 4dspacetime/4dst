@@ -9,14 +9,16 @@
 #include <print>
 #include <source_location>
 #include <string>
+#define FUNC_DBG std::source_location::current()
 namespace func
 {
     using namespace std::chrono;
-    using func_t  = std::function<void ()>;
-    using desc_t  = std::string;
-    using time_t  = nanoseconds;
-    using clock_t = high_resolution_clock;
-    using ullong  = unsigned long long;
+    using func_t    = std::function<void ()>;
+    using desc_t    = std::string;
+    using time_t    = nanoseconds;
+    using clock_t   = high_resolution_clock;
+    using src_loc_t = std::source_location;
+    using ullong    = unsigned long long;
     // inline namespace cls
     // {
     struct wrp
@@ -56,16 +58,16 @@ namespace func
     struct dbg
     {
         func_t body;
+        src_loc_t src_loc;
         desc_t desc;
         dbg
         (
             const func_t body,
+            const src_loc_t src_loc,
             const desc_t desc = "dbg"
-        ) : body(body), desc(desc) {}
+        ) : body(body), src_loc(src_loc), desc(desc) {}
         void operator()() const
         {
-            const std::source_location src_loc =
-                std::source_location::current();
             std::println
             (
                 "File:     {}.",
@@ -97,11 +99,11 @@ namespace func
     void if_else
     (   
         const bool cond,
-        const func_t func1,
-        const func_t func0 = [] {}
+        const func_t func_if_true,
+        const func_t func_if_false = [] {}
     )
     {
-        cond ? func1() : func0();
+        cond ? func_if_true() : func_if_false();
     }
     void loop
     (

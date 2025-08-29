@@ -7,13 +7,15 @@
 #include <functional>
 #include <print>
 #include <string>
+#define TGFUNC_DBG std::source_location::current()
 namespace tgfunc
 {
     using namespace std::chrono;
-    using desc_t  = std::string;
-    using time_t  = nanoseconds;
-    using clock_t = high_resolution_clock;
-    using ullong  = unsigned long long;
+    using desc_t    = std::string;
+    using time_t    = nanoseconds;
+    using clock_t   = high_resolution_clock;
+    using src_loc_t = std::source_location;
+    using ullong    = unsigned long long;
     // inline namespace cls
     // {
     template <class ret, class ...args>
@@ -114,16 +116,16 @@ namespace tgfunc
     {
         using func_t = std::function<ret (args...)>;
         func_t body;
+        src_loc_t src_loc;
         desc_t desc;
         dbg
         (
             const func_t body,
+            const src_loc_t src_loc,
             const desc_t desc = "dbg"
-        ) : body(body), desc(desc) {}
+        ) : body(body), src_loc(src_loc), desc(desc) {}
         ret operator()(const args ..._args) const
         {
-            const std::source_location src_loc =
-                std::source_location::current();
             std::println
             (
                 "File:     {}.",
@@ -155,16 +157,16 @@ namespace tgfunc
     {
         using func_t = std::function<void (args...)>;
         func_t body;
+        src_loc_t src_loc;
         desc_t desc;
         dbg
         (
             const func_t body,
+            const src_loc_t src_loc,
             const desc_t desc = "dbg"
-        ) : body(body), desc(desc) {}
+        ) : body(body), src_loc(src_loc), desc(desc) {}
         void operator()(const args ..._args) const
         {
-            const std::source_location src_loc =
-                std::source_location::current();
             std::println
             (
                 "File:     {}.",
@@ -197,12 +199,12 @@ namespace tgfunc
     type if_else
     (
         const bool cond,
-        const std::function<type ()> func1,
-        const std::function<type ()> func0 =
+        const std::function<type ()> func_if_true,
+        const std::function<type ()> func_if_false =
             [] { return type(); }
     )
     {
-        return cond ? func1() : func0();
+        return cond ? func_if_true() : func_if_false();
     }
     // }
 }
