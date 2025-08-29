@@ -4,6 +4,7 @@
 #include <functional>
 #include <iostream>
 #include <string>
+#define TGFUNC_DBG __FILE__, __LINE__, __func__
 namespace tgfunc
 {
     using namespace std::chrono;
@@ -111,19 +112,32 @@ namespace tgfunc
     {
         using func_t = std::function<ret (args...)>;
         func_t body;
+        char *file;
+        int line;
+        char *func;
         desc_t desc;
         dbg
         (
             const func_t body,
+            const char *file,
+            const int line,
+            const char *func,
             const desc_t desc = "dbg"
-        ) : body(body), desc(desc) {}
+        ) : body(body), file(file), line(line), func(func),
+            desc(desc) {}
         ret operator()(const args ..._args) const
         {
-            std::cout << "File: " << __FILE__ << '.' << std::endl;
-            std::cout << "Line: " << __LINE__ << '.' << std::endl;
-            std::cout << "Beginning of " << desc << '.' << std::endl;
+            std::cout << "File:     " << file << '.' <<
+                std::endl;
+            std::cout << "Line:     " << line << '.' <<
+                std::endl;
+            std::cout << "Function: " << func << '.' <<
+                std::endl;
+            std::cout << "Beginning of " << desc << '.' <<
+                std::endl;
             const ret _ret = body(_args...);
-            std::cout << "End of       " << desc << '.' << std::endl;
+            std::cout << "End of       " << desc << '.' <<
+                std::endl;
             return _ret;
         }
     };
@@ -132,19 +146,32 @@ namespace tgfunc
     {
         using func_t = std::function<void (args...)>;
         func_t body;
+        char *file;
+        int line;
+        char *func;
         desc_t desc;
         dbg
         (
             const func_t body,
+            const char *file,
+            const int line,
+            const char *func,
             const desc_t desc = "dbg"
-        ) : body(body), desc(desc) {}
+        ) : body(body), file(file), line(line), func(func),
+            desc(desc) {}
         void operator()(const args ..._args) const
         {
-            std::cout << "File: " << __FILE__ << '.' << std::endl;
-            std::cout << "Line: " << __LINE__ << '.' << std::endl;
-            std::cout << "Beginning of " << desc << '.' << std::endl;
+            std::cout << "File:     " << file << '.' <<
+                std::endl;
+            std::cout << "Line:     " << line << '.' <<
+                std::endl;
+            std::cout << "Function: " << func << '.' <<
+                std::endl;
+            std::cout << "Beginning of " << desc << '.' <<
+                std::endl;
             body(_args...);
-            std::cout << "End of       " << desc << '.' << std::endl;
+            std::cout << "End of       " << desc << '.' <<
+                std::endl;
         }
     };
     // }
@@ -154,12 +181,12 @@ namespace tgfunc
     type if_else
     (
         const bool cond,
-        const std::function<type ()> func1,
-        const std::function<type ()> func0 =
+        const std::function<type ()> func_if_true,
+        const std::function<type ()> func_if_false =
             [] { return type(); }
     )
     {
-        return cond ? func1() : func0();
+        return cond ? func_if_true() : func_if_false();
     }
     // }
 }

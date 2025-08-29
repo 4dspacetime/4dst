@@ -5,6 +5,7 @@
 #include <functional>
 #include <iostream>
 #include <string>
+#define FUNC_DBG __FILE__, __LINE__, __func__
 namespace func
 {
     using namespace std::chrono;
@@ -52,19 +53,32 @@ namespace func
     struct dbg
     {
         func_t body;
+        char *file;
+        int line;
+        char *func;
         desc_t desc;
         dbg
         (
             const func_t body,
+            const char *file,
+            const int line,
+            const char *func,
             const desc_t desc = "dbg"
-        ) : body(body), desc(desc) {}
+        ) : body(body), file(file), line(line), func(func),
+            desc(desc) {}
         void operator()() const
         {
-            std::cout << "File: " << __FILE__ << '.' << std::endl;
-            std::cout << "Line: " << __LINE__ << '.' << std::endl;
-            std::cout << "Beginning of " << desc << '.' << std::endl;
+            std::cout << "File:     " << file << '.' <<
+                std::endl;
+            std::cout << "Line:     " << line << '.' <<
+                std::endl;
+            std::cout << "Function: " << func << '.' <<
+                std::endl;
+            std::cout << "Beginning of " << desc << '.' <<
+                std::endl;
             body();
-            std::cout << "End of       " << desc << '.' << std::endl;
+            std::cout << "End of       " << desc << '.' <<
+                std::endl;
         }
     };
     // }
@@ -73,11 +87,11 @@ namespace func
     void if_else
     (
         const bool cond,
-        const func_t func1,
-        const func_t func0 = [] {}
+        const func_t func_if_true,
+        const func_t func_if_false = [] {}
     )
     {
-        cond ? func1() : func0();
+        cond ? func_if_true() : func_if_false();
     }
     void loop
     (
